@@ -1,0 +1,12 @@
+{
+  "name": "@solace_community/eventportal",
+  "version": "1.0.0",
+  "description": "This is a wrapper to Solace PubSub+ Event Portal REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
