@@ -36,11 +36,8 @@ async function createEDA(){
       stateID: "1"
     })
 
-    // SKIP. Create Enumeration object(DomainID, EnumName)
-    //    If exist:
-    //      Save existing Enumeration ID: e.g. 45i27ffgvzf
-    //    else:
-    //      Save new Enumeration ID
+    // SKIP. Create Enumeration object
+    // SKIP. Create Enumeration version
     
     // 4. Create an Event object
     let eventID = await ep.createEventObject({
