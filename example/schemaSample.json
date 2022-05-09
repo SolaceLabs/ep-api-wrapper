@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "The Root Schema",
+  "definitions": {},
+  "required": [
+    "fare_id",
+    "product_id",
+    "start_latitude",
+    "start_longitude",
+    "end_latitude",
+    "end_longitude"
+  ],
+  "properties": {
+    "start_longitude": {
+      "default": 0,
+      "examples": [-122.423941],
+      "type": "number",
+      "title": "The Start_longitude Schema",
+      "$id": "#/properties/start_longitude"
+    },
+    "start_latitude": {
+      "default": 0,
+      "examples": [37.761492],
+      "type": "number",
+      "title": "The Start_latitude Schema",
+      "$id": "#/properties/start_latitude"
+    },
+    "end_longitude": {
+      "default": 0,
+      "examples": [-122.417546],
+      "type": "number",
+      "title": "The End_longitude Schema",
+      "$id": "#/properties/end_longitude"
+    },
+    "product_id": {
+      "default": "",
+      "examples": ["a1111c8c-c720-46c3-8534-2fcdd730040d"],
+      "pattern": "^(.*)$",
+      "type": "string",
+      "title": "The Product_id Schema",
+      "$id": "#/properties/product_id"
+    },
+    "fare_id": {
+      "default": "",
+      "examples": ["d30e732b8bba22c9cdc10513ee86380087cb4a6f89e37ad21ba2a39f3a1ba960"],
+      "pattern": "^(.*)$",
+      "type": "string",
+      "title": "The Fare_id Schema",
+      "$id": "#/properties/fare_id"
+    },
+    "customer_id": {
+      "default": "",
+      "examples": ["d30e732b8bba22c9cdc10513ee86380087cb4a6f89e37ad21ba2a39f3a1ba960"],
+      "pattern": "^(.*)$",
+      "type": "string",
+      "title": "The customer_id Schema",
+      "$id": "#/properties/customer_id"
+    },
+    "end_latitude": {
+      "default": 0,
+      "examples": [37.775393],
+      "type": "number",
+      "title": "The End_latitude Schema",
+      "$id": "#/properties/end_latitude"
+    },
+    "request_id": {
+      "default": "",
+      "examples": ["d30e732b8bba22c9cdc10513ee86380087cb4a6f89e37ad21ba2a39f3a1ba960"],
+      "pattern": "^(.*)$",
+      "type": "string",
+      "title": "The request_id Schema",
+      "$id": "#/properties/request_id"
+    }
+  },
+  "$id": "http://example.com/root.json"
+}
