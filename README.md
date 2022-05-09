@@ -1,6 +1,6 @@
 # Solace Pubsub+ Event Portal REST API Wrapper
 
-This module makes implementing the Solace PubSub+ EP REST API in NodeJS/JS applications easier
+This module wraps the Solace PubSub+ EP REST API. This can be used to enable the creation of integrations, plugins, and component on top of the Solace PubSub+ Event API
 
 ## Installation
 
@@ -38,4 +38,3 @@ const ep = new EventPortal(SOLACE_CLOUD_TOKEN)
 ## To-Do
 
 - [] Document methods in README
-- [] Publish
