@@ -1,6 +1,6 @@
 {
   "name": "@solace-community/eventportal",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This is a wrapper to Solace PubSub+ Event Portal REST API",
   "main": "src/index.js",
   "scripts": {
