@@ -102,11 +102,6 @@ createEDA()
 // const EventPortal = require('../src/index')
 // const ep = new EventPortal()
 
-// const schemaContent = require("./schemaSample.json")
-
-// DOMAIN_NAME = process.argv[2] || process.env.SOLACE_APPLICATION_DOMAIN
-// if (!DOMAIN_NAME) throw new Error("Define Application Domain Name")
-
 // async function createEDA(){
 //   try {
 //     // 1. Create Application Domain
@@ -125,8 +120,6 @@ createEDA()
 //     // 6. Create Application in Application domain
 
 //     // 7. Create a new Application Version with details. If exists: THROW ERROR
-
-//     console.log("DONE")
 
 //   } catch(e) {
 //     throw new Error(e)
