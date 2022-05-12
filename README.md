@@ -211,7 +211,42 @@ applicationVersion = {
 - `declaredConsumedEventVersionIds` is an array of consumed events
 </details>
 
+<details>
+  <summary>getApplicationName(applicationID)</summary>
+    Returns the Application Name given ApplicationID
+</details>
+
+<details>
+  <summary>getApplicationObjectID(applicationName)</summary>
+    Returns the ApplicationID given Application Name
+</details>
+
+<details>
+  <summary>getEventName(eventID)</summary>
+    Returns the Event Name given EventID
+</details>
+
+<details>
+  <summary>getEventObjectID(eventName)</summary>
+    Returns the EventID given Event Name
+</details>
+
+<details>
+  <summary>getSchemaName(schemaID)</summary>
+    Returns the Schema Name given SchemaID
+</details>
+
+<details>
+  <summary>getSchemaObjectID(schemaName)</summary>
+    Returns the SchemaID given Schema Name
+</details>
+
+<details>
+  <summary>getApplicationDomainID(domainName)</summary>
+    Returns the ApplicationDomainID given Application Domain Name
+</details>
+
 ## To-Do
 
 - [x] Document methods in README
-- [] Add Jest unit tests
+- [ ] Add Jest unit tests

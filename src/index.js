@@ -266,6 +266,21 @@ class EventPortal {
   }
 
   /**
+  * Get Application Domain Name.
+  *
+  * @param  {String} domainID - Application DomainID.
+  */
+   async getApplicationDomainName(domainID) {
+    try {
+      console.log(`Fetching Domain Name for ApplicationDomainID: ${domainID}`)
+      const response = await this.api(this.token, 'GET', `applicationDomains?ids=${domainID}`, null)
+      return response.data[0].name
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  /**
   * Create Application Domain. If Application Domain already exists, return matching domain ID
   *
   * @param  {Object} domain - Application Domain configuration object.
