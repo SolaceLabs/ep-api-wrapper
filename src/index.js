@@ -33,7 +33,7 @@ class EventPortal {
       const response = await this.api(this.token, 'POST', `applications/${applicationVersion.applicationID}/versions`, applicationVersion)
       let applicationName = await this.getApplicationName(applicationVersion.applicationID)
       console.log(`Application Version ${applicationVersion.version} for application ${applicationName} created!`)
-      return response.data.id
+      return response.data.length == 0 ? null : response.data.id
     } catch (error) {
       throw new Error(error)
     }
@@ -42,12 +42,11 @@ class EventPortal {
   /**
   * Gets the state of the Application given the name and the version number
   *
-  * @param  {String} applicationName - Application name
+  * @param  {String} applicationID - Application ID
   * @param  {String} applicationVersion - Application version
   */
-  async getApplicationState(applicationName, applicationVersion){
+  async getApplicationState(applicationID, applicationVersion){
     try {
-      let applicationID = await this.getApplicationObjectID(applicationName)
       const response = await this.api(this.token, "GET", `applications/${applicationID}/versions?version=${applicationVersion}`)
       let stateID = response.data.length == 0 ? null : response.data[0].stateId
       switch (stateID) {
@@ -75,7 +74,7 @@ class EventPortal {
   * @param  {String} application.applicationDomainId - Application Domain ID.
   * @param  {String} application.name - Application name
   * @param  {String} application.applicationType - Application type
-  * @returns {String} Application object ID
+  * @returns {Array} Application object ID
   */
    async createApplicationObject(application = {
     applicationDomainId: String,
@@ -87,7 +86,7 @@ class EventPortal {
       console.log(`Application ${application.name} created!`)
       return response.data.id
     } catch (error) {
-      let applicationID = error.toString().includes("must be unique within application domain") ? await this.getApplicationObjectID(application.name) : null
+      let applicationID = error.toString().includes("must be unique within application domain") ? await this.getApplicationIDs(application.name) : null
       if (!applicationID) {
         throw new Error(error)
       }
@@ -104,11 +103,21 @@ class EventPortal {
     }
   }
 
-  async getApplicationObjectID(applicationName) {
+  /**
+  * Return an array of matching application name IDs
+  *
+  * @param  {String} applicationName - Application name
+  * @returns {Array} Application ID
+  */
+  async getApplicationIDs(applicationName) {
     try {
-      console.log(`Fetching application ID for application: ${applicationName}`)
+      console.log(`Fetching application ID(s) for application name: ${applicationName}`)
       const response = await this.api(this.token, 'GET', `applications?name=${applicationName}`)
-      return response.data[0].id
+      let ids = []
+      response.data.map(a =>{
+        ids.push(a.id)
+      })
+      return ids
     } catch (error) {
       throw new Error(error)
     }
@@ -159,11 +168,21 @@ class EventPortal {
     }
   }
 
-  async getEventObjectID(eventName) {
+  /**
+  * Return an array of matching event name IDs
+  *
+  * @param  {String} eventName - Event name
+  * @returns {Array} Event IDs
+  */
+  async getEventIDs(eventName) {
     try {
       console.log(`Fetching Event ID for Event: ${eventName}`)
       const response = await this.api(this.token, 'GET', `events?name=${eventName}`)
-      return response.data[0].id
+      let ids = []
+      response.data.map(a =>{
+        ids.push(a.id)
+      })
+      return ids
     } catch (error) {
       throw new Error(error)
     }
@@ -188,7 +207,7 @@ class EventPortal {
       console.log(`Event ${event.name} created!`)
       return response.data.id
     } catch (error) {
-      let eventID = error.toString().includes("must be unique within application domain") ? await this.getEventObjectID(event.name) : null
+      let eventID = error.toString().includes("must be unique within application domain") ? await this.getEventIDs(event.name) : null
       if (!eventID) {
         throw new Error(error)
       }
@@ -233,16 +252,20 @@ class EventPortal {
   }
 
   /**
-  * Get SchemaID.
+  * Return an array of matching schema name IDs
   *
-  * @param  {String} schemaName - Schema name.
-  * @returns {String} Schema ID
+  * @param  {String} schemaName - Schema name
+  * @returns {Array} Schema IDs
   */
-  async getSchemaObjectID(schemaName) {
+  async getSchemaIDs(schemaName) {
     try {
       console.log(`Fetching Schema ID for Schema: ${schemaName}`)
       const response = await this.api(this.token, 'GET', `schemas?name=${schemaName}`)
-      return response.data[0].id
+      let ids = []
+      response.data.map(a =>{
+        ids.push(a.id)
+      })
+      return ids
     } catch (error) {
       throw new Error(error)
     }
@@ -271,7 +294,7 @@ class EventPortal {
       console.log(`Schema ${schema.name} created!`)
       return response.data.id
     } catch (error) {
-      let schemaID = error.toString().includes("must be unique within application domain") ? await this.getSchemaObjectID(schema.name) : null
+      let schemaID = error.toString().includes("must be unique within application domain") ? await this.getSchemaIDs(schema.name) : null
       if (!schemaID) {
         throw new Error(error)
       }
@@ -288,7 +311,7 @@ class EventPortal {
     try {
       console.log(`Fetching Domain ID for Application Domain: ${domainName}`)
       const response = await this.api(this.token, 'GET', `applicationDomains?name=${domainName}`)
-      return response.data[0].id
+      return response.data.length == 0 ? null : response.data[0].id
     } catch (error) {
       throw new Error(error)
     }
@@ -333,7 +356,7 @@ class EventPortal {
     try {
       const response = await this.api(this.token, 'POST', `applicationDomains`, domain)
       console.log(`Application Domain ${domain.name} created!`)
-      return response.data.id
+      return response.data.length == 0 ? null : response.data.id
     } catch (error) {
       let domainID = error.toString().includes("already exists") ? await this.getApplicationDomainID(domain.name) : null
       if (!domainID) {
