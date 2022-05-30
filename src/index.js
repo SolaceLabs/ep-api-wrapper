@@ -39,6 +39,34 @@ class EventPortal {
     }
   }
 
+  /**
+  * Gets the state of the Application given the name and the version number
+  *
+  * @param  {String} applicationName - Application name
+  * @param  {String} applicationVersion - Application version
+  */
+  async getApplicationState(applicationName, applicationVersion){
+    try {
+      let applicationID = await this.getApplicationObjectID(applicationName)
+      const response = await this.api(this.token, "GET", `applications/${applicationID}/versions?version=${applicationVersion}`)
+      let stateID = response.data.length == 0 ? null : response.data[0].stateId
+      switch (stateID) {
+        case "1":
+          return "DRAFT"
+        case "2":
+          return "RELEASED"
+        case "3":
+          return "DEPRECATED"
+        case "4":
+          return "RETIRED"
+        default:
+          return null
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
 
   /**
   * Create application object. If Application object name already exists, return matching Application object ID
@@ -69,16 +97,17 @@ class EventPortal {
 
   async getApplicationName(applicationID) {
     try {
-      const response = await this.api(this.token, 'GET', `applications/${applicationID}`, null)
+      const response = await this.api(this.token, 'GET', `applications/${applicationID}`)
       return response.data.name
     } catch (error) {
+      throw new Error(error)
     }
   }
 
   async getApplicationObjectID(applicationName) {
     try {
       console.log(`Fetching application ID for application: ${applicationName}`)
-      const response = await this.api(this.token, 'GET', `applications?name=${applicationName}`, null)
+      const response = await this.api(this.token, 'GET', `applications?name=${applicationName}`)
       return response.data[0].id
     } catch (error) {
       throw new Error(error)
@@ -124,7 +153,7 @@ class EventPortal {
   
   async getEventName(eventID) {
     try {
-      const response = await this.api(this.token, 'GET', `events/${eventID}`, null)
+      const response = await this.api(this.token, 'GET', `events/${eventID}`)
       return response.data.name
     } catch (error) {
     }
@@ -133,7 +162,7 @@ class EventPortal {
   async getEventObjectID(eventName) {
     try {
       console.log(`Fetching Event ID for Event: ${eventName}`)
-      const response = await this.api(this.token, 'GET', `events?name=${eventName}`, null)
+      const response = await this.api(this.token, 'GET', `events?name=${eventName}`)
       return response.data[0].id
     } catch (error) {
       throw new Error(error)
@@ -197,7 +226,7 @@ class EventPortal {
 
   async getSchemaName(schemaID) {
     try {
-      const response = await this.api(this.token, 'GET', `schemas/${schemaID}`, null)
+      const response = await this.api(this.token, 'GET', `schemas/${schemaID}`)
       return response.data.name
     } catch (error) {
     }
@@ -212,7 +241,7 @@ class EventPortal {
   async getSchemaObjectID(schemaName) {
     try {
       console.log(`Fetching Schema ID for Schema: ${schemaName}`)
-      const response = await this.api(this.token, 'GET', `schemas?name=${schemaName}`, null)
+      const response = await this.api(this.token, 'GET', `schemas?name=${schemaName}`)
       return response.data[0].id
     } catch (error) {
       throw new Error(error)
@@ -258,7 +287,7 @@ class EventPortal {
   async getApplicationDomainID(domainName) {
     try {
       console.log(`Fetching Domain ID for Application Domain: ${domainName}`)
-      const response = await this.api(this.token, 'GET', `applicationDomains?name=${domainName}`, null)
+      const response = await this.api(this.token, 'GET', `applicationDomains?name=${domainName}`)
       return response.data[0].id
     } catch (error) {
       throw new Error(error)
@@ -271,13 +300,16 @@ class EventPortal {
   * @param  {String} domainID - Application DomainID.
   */
    async getApplicationDomainName(domainID) {
-    try {
-      console.log(`Fetching Domain Name for ApplicationDomainID: ${domainID}`)
-      const response = await this.api(this.token, 'GET', `applicationDomains?ids=${domainID}`, null)
-      return response.data[0].name
-    } catch (error) {
-      throw new Error(error)
+    if(domainID){
+      try {
+        console.log(`Fetching Domain Name for ApplicationDomainID: ${domainID}`)
+        const response = await this.api(this.token, 'GET', `applicationDomains?ids=${domainID}`)
+        return response.data[0].name
+      } catch (error) {
+        throw new Error(error)
+      }
     }
+    return null
   }
 
   /**

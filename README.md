@@ -246,7 +246,15 @@ applicationVersion = {
     Returns the ApplicationDomainID given Application Domain Name
 </details>
 
+<details>
+  <summary>getApplicationState(applicationName, applicationVersion)</summary>
+    Returns the Application State given the application name and application version. The current states are 
+    - DRAFT
+    - RELEASED
+    - DEPRECATED
+    - RETIRED
+</details>
+
 ## To-Do
 
-- [x] Document methods in README
 - [ ] Add Jest unit tests
