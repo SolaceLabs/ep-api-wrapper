@@ -217,8 +217,8 @@ applicationVersion = {
 </details>
 
 <details>
-  <summary>getApplicationObjectID(applicationName)</summary>
-    Returns the ApplicationID given Application Name
+  <summary>getApplicationIDs(applicationName)</summary>
+    Return an array of matching applicatio  name IDs
 </details>
 
 <details>
@@ -227,8 +227,8 @@ applicationVersion = {
 </details>
 
 <details>
-  <summary>getEventObjectID(eventName)</summary>
-    Returns the EventID given Event Name
+  <summary>getEventIDs(eventName)</summary>
+    Returns an array of matching event name IDs
 </details>
 
 <details>
@@ -237,8 +237,8 @@ applicationVersion = {
 </details>
 
 <details>
-  <summary>getSchemaObjectID(schemaName)</summary>
-    Returns the SchemaID given Schema Name
+  <summary>getSchemaIDs(schemaName)</summary>
+    Return an array of matching schema name IDs
 </details>
 
 <details>
@@ -247,8 +247,8 @@ applicationVersion = {
 </details>
 
 <details>
-  <summary>getApplicationState(applicationName, applicationVersion)</summary>
-    Returns the Application State given the application name and application version. The current states are 
+  <summary>getApplicationState(applicationID, applicationVersion)</summary>
+    Returns the Application State given the application ID and application version. The current states are 
     - DRAFT
     - RELEASED
     - DEPRECATED
