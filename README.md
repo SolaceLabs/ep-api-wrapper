@@ -21,7 +21,11 @@ const ep = new EventPortal(SOLACE_CLOUD_TOKEN)
 
 ## How to use
 
-Check out the `create.js` script in the example directory for API usage
+Check out the `create.js` script in the example directory for API usage.
+
+Here is a video as well
+
+[![PubSub+ Event Portal API Wrapper Demo Video](https://img.youtube.com/vi/Maol3gXuPoc/0.jpg)](https://www.youtube.com/watch?v=Maol3gXuPoc)
 
 ## Environment Variables
 
