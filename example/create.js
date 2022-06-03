@@ -51,7 +51,7 @@ async function createEDA(){
     // Topic definitions
     // addressLevel = [{"name": "level1", "addressLevelType": "literal"}]
     let addressLevels = [
-      {name: "tamimi", addressLevelType: "literal"},
+      {name: "level1", addressLevelType: "literal"},
       {name: "level2", addressLevelType: "variable"},
       {name: "level3", addressLevelType: "literal"},
       {name: "level4", addressLevelType: "variable"},
@@ -61,7 +61,7 @@ async function createEDA(){
       eventID: eventID,
       displayName: "Scripted Version",
       version: "0.0.1",
-      payloadSchemaVersionId: schemaVersionID,
+      schemaVersionId: schemaVersionID,
       deliveryDescriptor:{
         brokerType: "solace",
         address:{
@@ -104,22 +104,19 @@ createEDA()
 
 // async function createEDA(){
 //   try {
-//     // 1. Create Application Domain
+    // 1. Create Application Domain
 
-//     // 2. Create a Schema Object
+    // 2. Create a Schema Object
 
-//     // 3. Create a Schema version. If exist  : THROW ERROR
+    // 3. Create a Schema version.
 
-//     // 4. Create an Event object
+    // 4. Create an Event object
     
-//     // 5. Create an Event version and associate a schema and topic to it. If exist: THROW ERROR
+    // 5. Create an Event version and associate a schema and topic to it.
 
-//     // Topic definitions
-//     // addressLevel = [{"name": "level1", "addressLevelType": "literal"}]
-    
-//     // 6. Create Application in Application domain
+    // 6. Create Application in Application domain
 
-//     // 7. Create a new Application Version with details. If exists: THROW ERROR
+    // 7. Create a new Application Version with details.
 
 //   } catch(e) {
 //     throw new Error(e)

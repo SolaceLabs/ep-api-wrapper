@@ -82,7 +82,7 @@ schema = {
 </details>
 
 <details>
-  <summary>createSchemaVersion(schemaVersion)</summary>
+  <summary>createSchemaVersion(schemaVersion, overwrite)</summary>
     Creates a Schema version given a schema version definition. An example of a schema version object :
 
 ```
@@ -102,8 +102,9 @@ schemaVersion = {
 
 ### Notes
 
-- If the Schema version exists, an error is thrown
+- If the Schema version exists and overwrite is not set, an error is thrown
 - The schema content is in string format
+- Setting the overwrite flag to true will overwrite the schema if the State is `DRAFT` otherwise throws an error
 
 </details>
 
@@ -129,7 +130,7 @@ event = {
 </details>
 
 <details>
-  <summary>createEventVersion(eventVersion)</summary>
+  <summary>createEventVersion(eventVersion, overwrite)</summary>
     Creates an Event version given an event version definition. An example of an event version object :
 
 ```
@@ -137,7 +138,7 @@ eventVersion = {
   eventID: eventID,
   displayName: "Scripted Version",
   version: "0.0.1",
-  payloadSchemaVersionId: schemaVersionID,
+  schemaVersionId: schemaVersionID,
   deliveryDescriptor:{
     brokerType: "solace",
     address:{
@@ -154,7 +155,8 @@ eventVersion = {
 
 ### Notes
 
-- If the Event version exists, an error is thrown
+- If the Event version exists and overwrite is not set, an error is thrown
+- Setting the overwrite flag to true will overwrite the event if the State is `DRAFT` otherwise throws an error
 - the `addressLevels` parameter is an array with the following format
 
 ```
@@ -190,7 +192,7 @@ application = {
 </details>
 
 <details>
-  <summary>createApplicationVersion(applicationVersion)</summary>
+  <summary>createApplicationVersion(applicationVersion, overwrite)</summary>
     Creates an Application version given an application version definition. An example of an application version object :
 
 ```
@@ -210,9 +212,10 @@ applicationVersion = {
 
 ### Notes
 
-- If the Application version exists, an error is thrown
+- If the Application version exists and overwrite is not set, an error is thrown
 - `declaredProducedEventVersionIds` is an array of produced events
 - `declaredConsumedEventVersionIds` is an array of consumed events
+- Setting the overwrite flag to true will overwrite the application if the State is `DRAFT` otherwise throws an error
 </details>
 
 <details>
@@ -251,8 +254,46 @@ applicationVersion = {
 </details>
 
 <details>
+  <summary>getSchemaVersionID(schemaID, schemaVersion)</summary>
+    Return the SchemaVersion ID given the schemaID and SchemaVersion string
+</details>
+
+<details>
+  <summary>getApplicationVersionID(applicationID, applicationVersion)</summary>
+    Return the application version IDs given the applicationID and applicationVersion
+</details>
+
+<details>
+  <summary>getEventVersionID(eventID, eventVersion)</summary>
+    Return the event version IDs given the eventID and eventVersion
+</details>
+
+<details>
+  <summary>getSchemaVersionID(schemaID, schemaVersion)</summary>
+    Return the schema version IDs given the schemaID and schemaVersion
+</details>
+
+<details>
   <summary>getApplicationState(applicationID, applicationVersion)</summary>
     Returns the Application State given the application ID and application version. The current states are 
+    - DRAFT
+    - RELEASED
+    - DEPRECATED
+    - RETIRED
+</details>
+
+<details>
+  <summary>getEventState(eventID, eventVersion)</summary>
+    Returns the Event State given the event ID and event version. The current states are 
+    - DRAFT
+    - RELEASED
+    - DEPRECATED
+    - RETIRED
+</details>
+
+<details>
+  <summary>getSchemaState(schemaID, schemaVersion)</summary>
+    Returns the Schema State given the schema ID and schema version. The current states are 
     - DRAFT
     - RELEASED
     - DEPRECATED

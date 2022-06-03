@@ -10,7 +10,7 @@ class EventPortal {
   }
 
   /**
-  * Create Application Version. Throws error if version already exists
+  * Create Application Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
   * @param  {Object} applicationVersion - Application configuration object.
   * @param  {String} applicationVersion.applicationID - Application Object ID
@@ -20,6 +20,7 @@ class EventPortal {
   * @param  {Array} applicationVersion.declaredProducedEventVersionIds - List of Produced events
   * @param  {Array} applicationVersion.declaredConsumedEventVersionIds - List of Consumed events
   * @param  {String} applicationVersion.type - Application type
+  * @param  {Bool} overwrite - Overwrites existing version if state is DRAFT. Default: False
   */
    async createApplicationVersion(applicationVersion = {
     applicationID: String,
@@ -28,19 +29,31 @@ class EventPortal {
     displayName: String,
     declaredProducedEventVersionIds: Array,
     declaredConsumedEventVersionIds: Array,
-    type: String}) {
+    type: String}, overwrite = false) {
     try {
       const response = await this.api(this.token, 'POST', `applications/${applicationVersion.applicationID}/versions`, applicationVersion)
       let applicationName = await this.getApplicationName(applicationVersion.applicationID)
       console.log(`Application Version ${applicationVersion.version} for application ${applicationName} created!`)
       return response.data.length == 0 ? null : response.data.id
     } catch (error) {
+      if (overwrite) {
+        let applicationState = error.toString().includes("applicationVersion has been passed in an invalid format") ? await this.getApplicationState(applicationVersion.applicationID, applicationVersion.version) : null
+        if (applicationState == "RELEASED" || applicationState == "DEPRECATED" || applicationState == "RETIRED") {
+          throw new Error(`Application ${applicationVersion.displayName} version ${applicationVersion.version} is ${applicationState}`)
+        } else if (applicationState == "DRAFT") {
+          let applicationVersionID = await this.getApplicationVersionID(applicationVersion.applicationID,applicationVersion.version)
+          const response = await this.api(this.token, 'PATCH', `applications/${applicationVersion.applicationID}/versions/${applicationVersionID}`, applicationVersion)
+          let applicationName = await this.getApplicationName(applicationVersion.applicationID)
+          console.log(`Patched Application "${applicationName}" Version ${applicationVersion.version}`)
+          return response.data.id
+        }
+      } 
       throw new Error(error)
     }
   }
 
   /**
-  * Gets the state of the Application given the name and the version number
+  * Gets the state of the Application given the ID and the version number
   *
   * @param  {String} applicationID - Application ID
   * @param  {String} applicationVersion - Application version
@@ -65,7 +78,6 @@ class EventPortal {
       throw new Error(error)
     }
   }
-
 
   /**
   * Create application object. If Application object name already exists, return matching Application object ID
@@ -94,6 +106,12 @@ class EventPortal {
     }
   }
 
+  /**
+  * Gets the Application name given the application ID
+  *
+  * @param  {String} applicationID - Application ID
+  * @returns {String} Application name
+  */
   async getApplicationName(applicationID) {
     try {
       const response = await this.api(this.token, 'GET', `applications/${applicationID}`)
@@ -124,13 +142,33 @@ class EventPortal {
   }
 
   /**
-  * Create Event Version. Throws error if version already exists
+  * Return the application version IDs given the applicationID and applicationVersion
+  *
+  * @param  {String} applicationID - Application object ID
+  * @param  {String} applicationVersion - Application version name
+  * @returns {String} Application Version ID
+  */
+   async getApplicationVersionID(applicationID, applicationVersion) {
+    try {
+      const response = await this.api(this.token, 'GET', `applications/${applicationID}/versions?versions=${applicationVersion}`)
+    for (var application of response.data) {
+      if (application.version == applicationVersion) {
+        return application.id
+      }
+    }
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  /**
+  * Create Event Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
   * @param  {Object} eventVersion - Schema configuration object.
   * @param  {String} eventVersion.eventID - Event Object ID.
   * @param  {String} eventVersion.displayName - Event Version name
   * @param  {String} eventVersion.version - Event Version number
-  * @param  {String} eventVersion.payloadSchemaVersionId - Schema version ID
+  * @param  {String} eventVersion.schemaVersionId - Schema version ID
   * @param  {Object} eventVersion.deliveryDescriptor - Event version details
   * @param  {String} eventVersion.deliveryDescriptor.brokerType - The type of broker the event belongs to 
   * @param  {Object} eventVersion.deliveryDescriptor.address - the topic hierarchy
@@ -138,28 +176,94 @@ class EventPortal {
   * @param  {String} eventVersion.deliveryDescriptor.address.addressLevels.name - Level string name
   * @param  {String} eventVersion.deliveryDescriptor.address.addressLevels.addressLevelType - Level type: literal, variable
   * @param  {String} eventVersion.stateID - Event version state
+  * @param  {Bool} overwrite - Overwrites existing version if state is DRAFT. Default: False
   */
    async createEventVersion(eventVersion = {
     eventID: String,
     displayName: String,
     description: String,
     version: String,
-    payloadSchemaVersionId: String,
+    schemaVersionId: String,
     deliveryDescriptor: {
       brokerType: String,
       address: Array
     },
-    stateID: String}) {
+    stateID: String}, overwrite = false) {
     try {
       const response = await this.api(this.token, 'POST', `events/${eventVersion.eventID}/versions`, eventVersion)
       let eventName = await this.getEventName(eventVersion.eventID)
       console.log(`Event Version ${eventVersion.version} for Event ${eventName} created!`)
       return response.data.id
     } catch (error) {
+      if (overwrite) {
+        let eventState = error.toString().includes("eventVersion has been passed in an invalid format") ? await this.getEventState(eventVersion.eventID, eventVersion.version) : null
+        if (eventState == "RELEASED" || eventState == "DEPRECATED" || eventState == "RETIRED") {
+          throw new Error(`Event ${eventVersion.displayName} version ${eventVersion.version} is ${eventState}`)
+        } else if (eventState == "DRAFT") {
+          let eventVersionID = await this.getEventVersionID(eventVersion.eventID,eventVersion.version)
+          const response = await this.api(this.token, 'PATCH', `events/${eventVersion.eventID}/versions/${eventVersionID}`, eventVersion)
+          let eventName = await this.getEventName(eventVersion.eventID)
+          console.log(`Patched Event "${eventName}" Version ${eventVersion.version}`)
+          return response.data.id
+        }
+      } 
+      throw new Error(error)
+    }
+  }
+
+  /**
+  * Gets the state of the Event given the ID and the version number
+  *
+  * @param  {String} eventID - Event ID
+  * @param  {String} eventVersion - Event version
+  */
+   async getEventState(eventID, eventVersion){
+    try {
+      const response = await this.api(this.token, "GET", `events/${eventID}/versions?version=${eventVersion}`)
+      let stateID = response.data.length == 0 ? null : response.data[0].stateId
+      switch (stateID) {
+        case "1":
+          return "DRAFT"
+        case "2":
+          return "RELEASED"
+        case "3":
+          return "DEPRECATED"
+        case "4":
+          return "RETIRED"
+        default:
+          return null
+      }
+    } catch (error) {
       throw new Error(error)
     }
   }
   
+  /**
+  * Return the event version IDs given the eventID and eventVersion
+  *
+  * @param  {String} eventID - Event object ID
+  * @param  {String} eventVersion - Event version name
+  * @returns {String} Event Version ID
+  */
+   async getEventVersionID(eventID, eventVersion) {
+    try {
+      const response = await this.api(this.token, 'GET', `events/${eventID}/versions?versions=${eventVersion}`)
+    for (var event of response.data) {
+      if (event.version == eventVersion) {
+        return event.id
+      }
+    }
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+  
+  /**
+  * Return the Event name given the event ID
+  *
+  * @param  {String} eventID - Event object ID
+  * @returns {String} Event Name
+  */
   async getEventName(eventID) {
     try {
       const response = await this.api(this.token, 'GET', `events/${eventID}`)
@@ -216,7 +320,7 @@ class EventPortal {
   }
 
   /**
-  * Create Schema Version. Throws error if version already exists
+  * Create Schema Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
   * @param  {Object} schemaVersion - Schema configuration object.
   * @param  {String} schemaVersion.schemaID - Schema Object ID
@@ -225,29 +329,95 @@ class EventPortal {
   * @param  {String} schemaVersion.version - Schema version 
   * @param  {string} schemaVersion.content - Schema content
   * @param  {String} schemaVersion.stateID - Schema state ID
+  * @param  {Bool} overwrite - Overwrites existing version if state is DRAFT. Default: False
   */
-  async createSchemaVersion(schemaVersion = {
+   async createSchemaVersion(schemaVersion = {
     schemaID: String,
     description: String,
     version: String,
     displayName: String,
     content: String,
-    stateID: String}) {
+    stateID: String}, overwrite = false) {
     try {
       const response = await this.api(this.token, 'POST', `schemas/${schemaVersion.schemaID}/versions`, schemaVersion)
       let schemaName = await this.getSchemaName(schemaVersion.schemaID)
       console.log(`Schema Version ${schemaVersion.version} for Schema ${schemaName} created!`)
       return response.data.id
     } catch (error) {
+      if (overwrite) {
+        let schemaState = error.toString().includes("already in use") ? await this.getSchemaState(schemaVersion.schemaID, schemaVersion.version) : null
+        if (schemaState == "RELEASED" || schemaState == "DEPRECATED" || schemaState == "RETIRED") {
+          throw new Error(`Schema ${schemaVersion.displayName} version ${schemaVersion.version} is ${schemaState}`)
+        } else if (schemaState == "DRAFT") {
+          let schemaVersionID = await this.getSchemaVersionID(schemaVersion.schemaID,schemaVersion.version)
+          const response = await this.api(this.token, 'PATCH', `schemas/${schemaVersion.schemaID}/versions/${schemaVersionID}`, schemaVersion)
+          let schemaName = await this.getSchemaName(schemaVersion.schemaID)
+          console.log(`Patched Schema "${schemaName}" Version ${schemaVersion.version}`)
+          return response.data.id
+        }
+      } 
+      throw new Error(error)
+    }
+  }
+  
+  /**
+  * Gets the state of the Schema given the ID and the version number
+  *
+  * @param  {String} schemaID - Schema ID
+  * @param  {String} schemaVersion - Schema version
+  */
+   async getSchemaState(schemaID, schemaVersion){
+    try {
+      const response = await this.api(this.token, "GET", `schemas/${schemaID}/versions?version=${schemaVersion}`)
+      let stateID = response.data.length == 0 ? null : response.data[0].stateId
+      switch (stateID) {
+        case "1":
+          return "DRAFT"
+        case "2":
+          return "RELEASED"
+        case "3":
+          return "DEPRECATED"
+        case "4":
+          return "RETIRED"
+        default:
+          return null
+      }
+    } catch (error) {
       throw new Error(error)
     }
   }
 
+  /**
+  * Return the schema name given the schema ID
+  *
+  * @param  {String} schemaID - Schema object ID
+  * @returns {String} Schema Name
+  */
   async getSchemaName(schemaID) {
     try {
       const response = await this.api(this.token, 'GET', `schemas/${schemaID}`)
       return response.data.name
     } catch (error) {
+    }
+  }
+
+  /**
+  * Return the schema version IDs given the schemaID and schemaVersion
+  *
+  * @param  {String} schemaID - Schema object ID
+  * @param  {String} schemaVersion - Schema version name
+  * @returns {String} Schema Version ID
+  */
+   async getSchemaVersionID(schemaID, schemaVersion) {
+    try {
+      const response = await this.api(this.token, 'GET', `schemas/${schemaID}/versions?versions=${schemaVersion}`)
+    for (var schema of response.data) {
+      if (schema.version == schemaVersion) {
+        return schema.id
+      }
+    }
+    } catch (error) {
+      throw new Error(error)
     }
   }
 
