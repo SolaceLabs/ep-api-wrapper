@@ -303,3 +303,4 @@ applicationVersion = {
 ## To-Do
 
 - [ ] Add Jest unit tests
+- [ ] Add Enum support
