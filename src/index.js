@@ -161,6 +161,54 @@ class EventPortal {
     }
   }
 
+  async getApplications(params=null) {
+    try {
+        console.log(`Fetching Applications`)
+        let url = `applications`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  async getApplicationByID(applicationId, params=null) {
+    try {
+        console.log(`Fetching Application By ID`)
+        let url = `applications/${applicationId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getApplicationVersions(applicationId, params=null) {
+    try {
+        console.log(`Fetching Application Versions`)
+        let url = `applications/${applicationId}/versions`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  async getApplicationVersionByID(versionId, params=null) {
+    try {
+        console.log(`Fetching Application Version By ID`)
+        let url = `applicationVersions/${versionId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
   /**
   * Create Event Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
@@ -319,6 +367,54 @@ class EventPortal {
     }
   }
 
+  async getEvents(params=null) {
+    try {
+        console.log(`Fetching Events`)
+        let url = `events`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getEventByID(eventId, params=null) {
+    try {
+        console.log(`Fetching Event`)
+        let url = `events/${eventId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getEventVersions(eventId, params=null) {
+    try {
+        console.log(`Fetching Events`)
+        let url = `events/${eventId}/versions`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getEventVersionByID(versionId, params=null) {
+    try {
+        console.log(`Fetching Event Versions`)
+        let url = `eventVersions/${versionId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
   /**
   * Create Schema Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
@@ -472,6 +568,53 @@ class EventPortal {
     }
   }
 
+  async getSchemas(params=null) {
+    try {
+        console.log(`Fetching Schemas`)
+        let url = `schemas`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getSchemaByID(schemaId, params=null) {
+    try {
+        console.log(`Fetching Schema`)
+        let url = `schemas/${schemaId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getSchemaVersionByID(versionId, params=null) {
+    try {
+        console.log(`Fetching Schema Versions`)
+        let url = `schemaVersions/${versionId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  async getSchemaVersions(schemaId, params=null) {
+    try {
+        console.log(`Fetching Schema Versions`)
+        let url = `schemas/${schemaId}/versions`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
   /**
   * Get Application DomainID.
   *
@@ -535,6 +678,30 @@ class EventPortal {
       return domainID
     }
   }
+
+  async getApplicationDomains(params=null) {
+    try {
+        console.log(`Fetching Application Domains`)
+        let url = `applicationDomains`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }
+
+  async getApplicationDomainByID(domainId, params=null) {
+    try {
+        console.log(`Fetching Domains`)
+        let url = `applicationDomains/${domainId}`
+        url = url + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', url, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
 
   async api(token, method, endpoint, data = {}) {
     try {
