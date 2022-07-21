@@ -166,12 +166,12 @@ class EventPortal {
   *
   * @param  {String} applicationID - Application object ID
   * @param  {String} applicationVersion - Application version name
-  * @returns {String} Application Version ID
+  * @returns {String} Application Version Object
   */
      async getApplicationVersionObject(applicationID, applicationVersion) {
         try {
           const response = await this.api(this.token, 'GET', `applications/${applicationID}/versions?versions=${applicationVersion}`)
-        for (var application of response.data) {
+        for (const application of response.data) {
           if (application.version == applicationVersion) {
             return application
           }
