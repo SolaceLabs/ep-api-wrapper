@@ -161,6 +161,27 @@ class EventPortal {
     }
   }
 
+    /**
+  * Return the application version object given the applicationID and applicationVersion
+  *
+  * @param  {String} applicationID - Application object ID
+  * @param  {String} applicationVersion - Application version name
+  * @returns {String} Application Version ID
+  */
+     async getApplicationVersionObject(applicationID, applicationVersion) {
+        try {
+          const response = await this.api(this.token, 'GET', `applications/${applicationID}/versions?versions=${applicationVersion}`)
+        for (var application of response.data) {
+          if (application.version == applicationVersion) {
+            return application
+          }
+        }
+        } catch (error) {
+          throw new Error(error)
+        }
+      }
+    
+  
   /**
   * Create Event Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
@@ -257,7 +278,24 @@ class EventPortal {
       throw new Error(error)
     }
   }
-  
+
+  /**
+  * Return the event version object given the eventVersionId
+  * In this case we don't have the eventID, so we need to get the object directly from the eventVersionID
+  * * Warning * : This is not an offically supported Event Portal API
+  * 
+  * @param  {String} eventVersionId - Event version object ID
+  * @returns {Object} Event Version Object
+  */
+  async getEventVersionObject(eventVersionId) {
+    try {
+      const response = await this.api(this.token, 'GET', `eventVersions/${eventVersionId}`)
+    return response.data
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   /**
   * Return the Event name given the event ID
   *
@@ -441,6 +479,24 @@ class EventPortal {
     }
   }
 
+  /**
+  * Return the schema version object given the schemaVersionId
+  * In this case we don't have the parent schema ID, so we need to get it from the schemaVersionId
+  * * Warning * : This is not an offically supported Event Portal API
+  *
+  * @param  {String} schemaVersionId - Schema version object ID
+  * @returns {Object} Schema Version Object
+  */
+     async getSchemaVersionObject(schemaVersionId) {
+        try {
+          const response = await this.api(this.token, 'GET', `schemaVersions/${schemaVersionId}`)
+        return response.data
+        } catch (error) {
+          throw new Error(error)
+        }
+      }
+        
+    
   /**
   * Create Schema object. If Schema object name already exists, return matching schema object ID
   *
