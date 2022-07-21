@@ -161,12 +161,12 @@ class EventPortal {
     }
   }
 
-    /**
+  /**
   * Return the application version object given the applicationID and applicationVersion
   *
   * @param  {String} applicationID - Application object ID
   * @param  {String} applicationVersion - Application version name
-  * @returns {String} Application Version Object
+  * @returns {Object} Application Version Object
   */
      async getApplicationVersionObject(applicationID, applicationVersion) {
         try {
@@ -290,7 +290,7 @@ class EventPortal {
   async getEventVersionObject(eventVersionId) {
     try {
       const response = await this.api(this.token, 'GET', `eventVersions/${eventVersionId}`)
-    return response.data
+      return response.data
     } catch (error) {
       throw new Error(error)
     }
@@ -490,7 +490,7 @@ class EventPortal {
      async getSchemaVersionObject(schemaVersionId) {
         try {
           const response = await this.api(this.token, 'GET', `schemaVersions/${schemaVersionId}`)
-        return response.data
+          return response.data
         } catch (error) {
           throw new Error(error)
         }
