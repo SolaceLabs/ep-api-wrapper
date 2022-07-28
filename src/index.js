@@ -162,6 +162,81 @@ class EventPortal {
   }
 
   /**
+  * Retrieve a list of applications that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of applications to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @param {String} params.name Name of the application to match on.
+  * @param {String} params.applicationDomainId Match only applications in the given application domain.
+  * @param {Array.<String>} params.ids Match only applications with the given IDs separated by commas.
+  * @param {String} params.applicationType Match only applications with the given applicationType.
+  * @param {String} params.sort 
+  * @returns {Object} ApplicationsResponse
+  */  
+  async getApplications(params=null) {
+    try {
+        console.log(`Fetching Applications`)
+        let endpoint = `applications`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  /**
+  * Retrieve a single application by its ID
+  * @param {String} applicationId The ID of the application object
+  * @returns {Object} ApplicationResponse
+  */  
+  async getApplicationByID(applicationId) {
+    try {
+        console.log(`Fetching Application By ID`)
+        let endpoint = `applications/${applicationId}`
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
+  * Retrieve a list of application versions that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of application versions to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @returns {Object} ApplicationVersionResponse
+  */  
+  async getApplicationVersions(applicationId, params=null) {
+    try {
+        console.log(`Fetching Application Versions`)
+        let endpoint = `applications/${applicationId}/versions`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  /**
+  * Retrieve a single application version by its ID
+  * @param {String} applicationId The ID of the application object
+  * @returns {Object} ApplicationVersionResponse
+  */  
+  async getApplicationVersionByID(versionId) {
+    try {
+        console.log(`Fetching Application Version By ID`)
+        let endpoint = `applicationVersions/${versionId}`
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
   * Create Event Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
   * @param  {Object} eventVersion - Schema configuration object.
@@ -320,6 +395,84 @@ class EventPortal {
   }
 
   /**
+  * Retrieve a list of events that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of events to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @param {String} params.name Name of the event to match on.
+  * @param {Boolean} params.shared Match only with shared or unshared events
+  * @param {String} params.applicationDomainId Match only events in the given application domain
+  * @param {Array.<String>} params.applicationDomainIds Match only events in the given application domain ids
+  * @param {Array.<String>} params.ids Match only events with the given IDs separated by commas
+  * @param {String} params.sort 
+  * @returns {Object} EventsResponse
+  */  
+  async getEvents(params=null) {
+    try {
+        console.log(`Fetching Events`)
+        let endpoint = `events`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
+  * Retrieve a single event by its ID
+  * @param {String} eventId The ID of the event object
+  * @returns {Object} EventResponse
+  */  
+   async getEventByID(eventId) {
+    try {
+        console.log(`Fetching Event`)
+        let endpoint = `events/${eventId}`
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
+  * Retrieve a list of event versions that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of events to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @param {Array.<String>} params.ids Match only event versions with the given IDs separated by commas
+  * @returns {Object} EventVersionsResponse
+  */  
+  async getEventVersions(eventId, params=null) {
+    try {
+        console.log(`Fetching Events`)
+        let endpoint = `events/${eventId}/versions`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
+  * Retrieve a single event version by its ID
+  * @param {String} versionId The ID of the event version object
+  * @returns {Object} EventVersionResponse
+  */  
+  async getEventVersionByID(versionId, params=null) {
+    try {
+        console.log(`Fetching Event Versions`)
+        let endpoint = `eventVersions/${versionId}`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
   * Create Schema Version. If overwrite flag is true, Patches existing version if state is DRAFT. Throws error otherwise
   *
   * @param  {Object} schemaVersion - Schema configuration object.
@@ -471,7 +624,83 @@ class EventPortal {
       return schemaID
     }
   }
+XXX
+  /**
+  * Retrieve a list of schemas that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of schemas to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @param {String} params.name Name of the schema to match on.
+  * @param {Boolean} params.shared Match only with shared or unshared schemas
+  * @param {String} params.applicationDomainId Match only schemas in the given application domain
+  * @param {Array.<String>} params.applicationDomainIds Match only schemas with the given IDs separated by commas.
+  * @param {Array.<String>} params.ids Match only schemas with the given IDs separated by commas
+  * @param {String} params.sort 
+  * @returns {Object} SchemasResponse
+  */  
+  async getSchemas(params=null) {
+    try {
+        console.log(`Fetching Schemas`)
+        let endpoint = `schemas`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
 
+  /**
+  * Retrieve a single schema by its ID
+  * @param {String} The ID of the schema object
+  * @returns {Object} SchemaResponse
+  */  
+  async getSchemaByID(schemaId) {
+    try {
+        console.log(`Fetching Schema`)
+        let endpoint = `schemas/${schemaId}`
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
+  * Retrieve a single schema version by its ID.
+  * @param {String} versionId The ID of the schema version object.
+  * @returns {Object} SchemaVersionResponse
+  */  
+  async getSchemaVersionByID(versionId) {
+    try {
+        console.log(`Fetching Schema Versions`)
+        let endpoint = `schemaVersions/${versionId}`
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
+
+  /**
+  * Retrieve a list of schema versions that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of schemas to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @param {Array.<String>} params.ids Match only schema versions with the given IDs separated by commas
+  * @returns {Object} SchemaVersionsResponse
+  */  
+  async getSchemaVersions(schemaId, params=null) {
+    try {
+        console.log(`Fetching Schema Versions`)
+        let endpoint = `schemas/${schemaId}/versions`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
   /**
   * Get Application DomainID.
   *
@@ -535,6 +764,45 @@ class EventPortal {
       return domainID
     }
   }
+
+  /**
+  * Retrieve a list of application domains that match the given parameters
+  * @param {Object} params Optional parameters
+  * @param {Number} params.pageSize The number of application domains to get per page. Min: 1 Max: 100 (default to 20)
+  * @param {Number} params.pageNumber The page number to get. Min: 1 (default to 1)
+  * @param {String} params.name Name to be used to match the application domain
+  * @param {Array.<String>} params.ids Match only application domains with the given IDs separated by commas.
+  * @param {Array.<String>} params.include Specify extra data to be included, options are: stats
+  * @returns {Object} ApplicationDomainsResponse
+  */  
+  async getApplicationDomains(params=null) {
+    try {
+        console.log(`Fetching Application Domains`)
+        let endpoint = `applicationDomains`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }
+
+  /**
+  * Retrieve a single application domain by its ID
+  * @param {String} The ID of the application domain object
+  * @returns {Object} ApplicationDomainResponse
+  */  
+  async getApplicationDomainByID(domainId, params=null) {
+    try {
+        console.log(`Fetching Domains`)
+        let endpoint = `applicationDomains/${domainId}`
+        endpoint = endpoint + (params ? `?${params}` : '');
+        const response = await this.api(this.token, 'GET', endpoint, null)
+        return response;
+    } catch (error) {
+        throw new Error(error)
+    }
+  }  
 
   async api(token, method, endpoint, data = {}) {
     try {
