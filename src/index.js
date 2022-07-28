@@ -162,6 +162,25 @@ class EventPortal {
   }
 
   /**
+  * Return the application version object given the applicationID and applicationVersion
+  *
+  * @param  {String} applicationID - Application object ID
+  * @param  {String} applicationVersion - Application version name
+  * @returns {Object} Application Version Object
+  */
+     async getApplicationVersionObject(applicationID, applicationVersion) {
+        try {
+          const response = await this.api(this.token, 'GET', `applications/${applicationID}/versions?versions=${applicationVersion}`)
+        for (const application of response.data) {
+          if (application.version == applicationVersion) {
+            return application
+          }
+        }
+        } catch (error) {
+          throw new Error(error)
+        }
+      }
+    
   * Retrieve a list of applications that match the given parameters
   * @param {Object} params Optional parameters
   * @param {Number} params.pageSize The number of applications to get per page. Min: 1 Max: 100 (default to 20)
@@ -332,7 +351,24 @@ class EventPortal {
       throw new Error(error)
     }
   }
-  
+
+  /**
+  * Return the event version object given the eventVersionId
+  * In this case we don't have the eventID, so we need to get the object directly from the eventVersionID
+  * * Warning * : This is not an offically supported Event Portal API
+  * 
+  * @param  {String} eventVersionId - Event version object ID
+  * @returns {Object} Event Version Object
+  */
+  async getEventVersionObject(eventVersionId) {
+    try {
+      const response = await this.api(this.token, 'GET', `eventVersions/${eventVersionId}`)
+      return response.data
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   /**
   * Return the Event name given the event ID
   *
@@ -594,6 +630,24 @@ class EventPortal {
     }
   }
 
+  /**
+  * Return the schema version object given the schemaVersionId
+  * In this case we don't have the parent schema ID, so we need to get it from the schemaVersionId
+  * * Warning * : This is not an offically supported Event Portal API
+  *
+  * @param  {String} schemaVersionId - Schema version object ID
+  * @returns {Object} Schema Version Object
+  */
+     async getSchemaVersionObject(schemaVersionId) {
+        try {
+          const response = await this.api(this.token, 'GET', `schemaVersions/${schemaVersionId}`)
+          return response.data
+        } catch (error) {
+          throw new Error(error)
+        }
+      }
+        
+    
   /**
   * Create Schema object. If Schema object name already exists, return matching schema object ID
   *
