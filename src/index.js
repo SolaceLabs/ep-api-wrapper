@@ -181,6 +181,7 @@ class EventPortal {
         }
       }
     
+  /**
   * Retrieve a list of applications that match the given parameters
   * @param {Object} params Optional parameters
   * @param {Number} params.pageSize The number of applications to get per page. Min: 1 Max: 100 (default to 20)
